@@ -7,18 +7,23 @@ from cwk.util.strings.tableMaker import TableMaker
 
 
 class Usage:
-    def __init__(self, path, description=None, simple_path=False):
+    def __init__(self, path, description=None, simple_path=False,
+                 flag_prefix='-'):
         if simple_path:
             self.path = os.path.basename(path)
         else:
             self.path = path
 
         self.description = description
+        self.flag_prefix = flag_prefix
         self.options = list()
         self.options_by_flag = dict()
         self.arguments = list()
         self.__required_arg_count = 0
         self.__optional_arg_count = 0
+
+    def is_flag(self, string):
+        return string.startswith(self.flag_prefix)
 
     def option(self, flags, name=None, description=None, value_type=str,
                default=None, count=1):
@@ -41,7 +46,7 @@ class Usage:
         return option
 
     def is_option(self, flag):
-        return self.options_by_flag.has_key(flag)
+        return flag in self.options_by_flag
 
     def get_option_value(self, arguments, flag, index=0):
         try:
@@ -322,21 +327,27 @@ class Arguments:
 
         skip = False
 
+        value_count = len(values)
+
         for i, value in enumerate(values):
             if skip:
                 skip = False
                 continue
 
-            if value[0] == '-':
+            if usage.is_flag(value):
                 if not usage.is_option(value):
                     raise InvalidInputError('Illegal option: ' + value)
 
                 option = usage.get_option(value)
 
                 if option.name is not None:
+                    if i == value_count - 1 or usage.is_flag(values[i + 1]):
+                        raise InvalidInputError(
+                            'Missing value "' + option.name + '" for option "' +
+                            value + '"')
                     skip = True
 
-                if self.__flag_indices.has_key(value):
+                if value in self.__flag_indices:
                     self.__flag_indices[value].append(i)
                 else:
                     self.__flag_indices[value] = [i]
@@ -374,7 +385,7 @@ class Arguments:
 
     def has_flag(self, *flags):
         for flag in flags:
-            if self.__flag_indices.has_key(flag):
+            if flag in self.__flag_indices:
                 return True
 
         return False
