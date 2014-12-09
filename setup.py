@@ -3,7 +3,7 @@ from distutils.core import setup
 PACKAGES = [
     'cwk',
     'cwk.usage',
-    'cwk.uti'
+    'cwk.util'
 ]
 
 setup(
