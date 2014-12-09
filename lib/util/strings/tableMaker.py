@@ -1,7 +1,7 @@
 __author__ = 'ckolek'
 
-from core import *
-from stringBuilder import StringBuilder
+from .core import *
+from .stringBuilder import StringBuilder
 
 
 class TableMaker:

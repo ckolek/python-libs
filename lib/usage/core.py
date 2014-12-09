@@ -1,8 +1,9 @@
 __author__ = 'ckolek'
 
 import os
-from exceptions import IllegalUsageError, InvalidInputError, OptionError
-from cwkdev.util.strings import StringBuilder, TableMaker
+from .exceptions import IllegalUsageError, InvalidInputError, OptionError
+from cwk.util.strings.stringBuilder import StringBuilder
+from cwk.util.strings.tableMaker import TableMaker
 
 
 class Usage:
