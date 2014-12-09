@@ -36,10 +36,10 @@ class TableMaker:
         string = StringBuilder()
 
         for j in range(self.rows):
-            row = map(lambda i: split_lines(self.data[i][j],
+            row = list(map(lambda i: split_lines(self.data[i][j],
                                             line_length=column_widths[i]),
-                       columns)
-            row_heights = map(lambda d: len(d), row)
+                       columns))
+            row_heights = list(map(lambda d: len(d), row))
 
             for jj in range(max(row_heights)):
                 for i in columns:
@@ -59,7 +59,8 @@ class TableMaker:
             return self.data_lens
         else:
             weight_sum = sum(self.column_weights)
-            weights = map(lambda w: float(w) / weight_sum, self.column_weights)
+            weights = list(map(lambda w:
+                               float(w) / weight_sum, self.column_weights))
 
             columns = range(self.columns)
 
@@ -72,4 +73,4 @@ class TableMaker:
                          if weights[i] > 0 else self.data_lens[i],
                          columns)
 
-            return widths
+            return list(widths)
